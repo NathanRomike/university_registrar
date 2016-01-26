@@ -37,4 +37,6 @@ public class StudentTest {
     newStudent.update("Romike", "Nathan", "2016-01-25");
     assertEquals("Nathan Romike", newStudent.getFullName());
   }
+
+  
 }

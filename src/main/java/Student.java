@@ -81,8 +81,8 @@ public class Student {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT id AS mId, last_name AS mLastName, first_name AS mFirstName, enrollment_date AS mEnrollmentDate FROM students WHERE id = :id";
       Student student = con.createQuery(sql)
-        .addParameter("id", id)
-        .executeAndFetchFirst(Student.class);
+                           .addParameter("id", id)
+                           .executeAndFetchFirst(Student.class);
       return student;
     }
   }
