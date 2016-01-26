@@ -39,14 +39,28 @@ public class CourseTest {
   }
 
   @Test
+  public void getStudents_returnsAllStudents_ArrayList() {
+    Course newCourse = new Course("Intro to Programming", 1, "2016-01-04", "2016-02-05");
+    newCourse.save();
+    Student newStudent = new Student("Bowen", "Midori", "2016-01-26");
+    newStudent.save();
+
+    newCourse.addStudent(newStudent);
+    List savedStudents = newCourse.getStudents();
+    assertEquals(savedStudents.size(), 1);
+  }
+
+  @Test
   public void addStudent_addsStudentToCourse() {
     Course newCourse = new Course("Intro to Programming", 1, "2016-01-04", "2016-02-05");
     newCourse.save();
     Student newStudent = new Student("Bowen", "Midori", "2016-01-26");
     newStudent.save();
+    
     newCourse.addStudent(newStudent);
     Student savedStudent = newCourse.getStudents().get(0);
     assertTrue(newStudent.equals(savedStudent));
   }
+
 
 }

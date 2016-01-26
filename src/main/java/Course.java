@@ -47,7 +47,9 @@ public class Course {
     } else {
       Course newCourse = (Course) otherCourse;
       return this.getName().equals(newCourse.getName()) &&
-             this.getTermLength().equals(newCourse.getTermLength());
+             this.getTermStart().equals(newCourse.getTermStart()) &&
+             this.getTermEnd().equals(newCourse.getTermEnd());
+
     }
   }
 
@@ -96,6 +98,37 @@ public class Course {
          .addParameter("termEnd", termEnd)
          .addParameter("id", this.getId())
          .executeUpdate();
+    }
+  }
+
+  public void addStudent(Student student) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO enrollments(course_id, student_id, course_completed) VALUES (:courseId, :studentId, :courseCompleted)";
+      con.createQuery(sql)
+         .addParameter("courseId", this.mId)
+         .addParameter("studentId", student.getId())
+         .addParameter("courseCompleted", student.complete())
+         .executeUpdate();
+    }
+  }
+
+  public ArrayList<Student> getStudents() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT student_id FROM enrollments WHERE course_id = :courseId";
+      List<Integer> studentIds = con.createQuery(sql)
+        .addParameter("courseId", this.mId)
+        .executeAndFetch(Integer.class);
+
+      ArrayList<Student> associatedStudents = new ArrayList<Student>();
+
+      for (Integer studentId : studentIds) {
+        String studentQuery = "SELECT id AS mId, last_name AS mLastName, first_name AS mFirstName, enrollment_date AS mEnrollmentDate FROM students WHERE id = :studentId";
+        Student student = con.createQuery(studentQuery)
+                             .addParameter("studentId", studentId)
+                             .executeAndFetchFirst(Student.class);
+        associatedStudents.add(student);
+      }
+      return associatedStudents;
     }
   }
 

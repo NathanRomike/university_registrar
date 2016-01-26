@@ -100,4 +100,37 @@ public class Student {
          .executeUpdate();
     }
   }
+
+  public void addCourse(Course course) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO enrollments(course_id, student_id, course_completed) VALUES (:courseId, :studentId, :courseCompleted)";
+      con.createQuery(sql)
+         .addParameter("studentId", this.mId)
+         .addParameter("courseId", course.getId())
+         .addParameter("courseCompleted", this.mComplete)
+         .executeUpdate();
+    }
+  }
+
+  public ArrayList<Course> getCourses() {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "SELECT course_id FROM enrollments WHERE student_id = :studentId";
+      List<Integer> courseIds = con.createQuery(sql)
+                                   .addParameter("studentId", this.mId)
+                                   .executeAndFetch(Integer.class);
+
+      ArrayList<Course> associatedCourses = new ArrayList<Course>();
+
+      for (Integer courseId : courseIds) {
+        String courseQuery = "SELECT id AS mId, name AS mName FROM courses WHERE id = :courseId";
+        Course course = con.createQuery(courseQuery)
+                           .addParameter("courseId", courseId)
+                           .executeAndFetchFirst(Course.class);
+        associatedCourses.add(course);
+      }
+      return associatedCourses;
+    }
+  }
+
+
 }
