@@ -1,0 +1,17 @@
+<h1>All Students</h1>
+<table class="table table-hover sortable" id="studentTable">
+  <thead>
+    <tr>
+      <th>Last Name</th>
+      <th>First Name</th>
+      <th>Enrollment Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    #foreach ($student in $students)
+      <td><a href="/students/$student.getId()">$student.getLastName()</a></td>
+      <td><a href="/students/$student.getId()">$student.getFirstName()</a></td>
+      <td><a href="/students/$student.getId()">$student.getEnrollmentDate()</a></td>
+    #end
+  </tbody>
+</table>

@@ -40,7 +40,7 @@ public class StudentTest {
 
   @Test
   public void getCourses_returnsAllCourses_ArrayList() {
-    Course newCourse = new Course("Intro to Programming", 1, "2016-01-04", "2016-02-05");
+    Course newCourse = new Course("Intro to Programming", "CS100", "2016-01-04", "2016-02-05");
     newCourse.save();
     Student newStudent = new Student("Bowen", "Midori", "2016-01-26");
     newStudent.save();

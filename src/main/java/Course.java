@@ -5,7 +5,7 @@ import org.sql2o.*;
 public class Course {
   private int mId;
   private String mName;
-  private int mDepartmentId;
+  private String mCourseCode;
   private String mTermStart;
   private String mTermEnd;
 
@@ -17,8 +17,8 @@ public class Course {
     return mName;
   }
 
-  public int getDepartment() {
-    return mDepartmentId;
+  public String getCourseCode() {
+    return mCourseCode;
   }
 
   public String getTermStart() {
@@ -33,9 +33,9 @@ public class Course {
     return mTermStart + "-" + mTermEnd;
   }
 
-  public Course(String name, int departmentId, String termStart, String termEnd) {
+  public Course(String name, String courseCode, String termStart, String termEnd) {
     this.mName = name;
-    this.mDepartmentId = departmentId;
+    this.mCourseCode = courseCode;
     this.mTermStart = termStart;
     this.mTermEnd = termEnd;
   }
@@ -47,6 +47,7 @@ public class Course {
     } else {
       Course newCourse = (Course) otherCourse;
       return this.getName().equals(newCourse.getName()) &&
+             this.getCourseCode().equals(newCourse.getCourseCode()) &&
              this.getTermStart().equals(newCourse.getTermStart()) &&
              this.getTermEnd().equals(newCourse.getTermEnd());
 
@@ -55,7 +56,7 @@ public class Course {
 
   public static List<Course> all() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT id AS mId, name AS mName, department_id AS mDepartmentId, term_start AS mTermStart, term_end AS mTermEnd FROM courses";
+      String sql = "SELECT id AS mId, name AS mName, course_code AS mCourseCode, term_start AS mTermStart, term_end AS mTermEnd FROM courses";
       return con.createQuery(sql)
                 .executeAndFetch(Course.class);
     }
@@ -63,10 +64,10 @@ public class Course {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO courses(name, department_id, term_start, term_end) VALUES (:name, :departmentId, :termStart, :termEnd)";
+      String sql = "INSERT INTO courses(name, course_code, term_start, term_end) VALUES (:name, :courseCode, :termStart, :termEnd)";
       mId = (int) con.createQuery(sql, true)
         .addParameter("name", mName)
-        .addParameter("departmentId", mDepartmentId)
+        .addParameter("courseCode", mCourseCode)
         .addParameter("termStart", mTermStart)
         .addParameter("termEnd", mTermEnd)
         .executeUpdate()
@@ -76,7 +77,7 @@ public class Course {
 
   public static Course find(int id) {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT id AS mId, name AS mName, department_id AS mDepartmentId, term_start AS mTermStart, term_end AS mTermEnd FROM courses WHERE id = :id";
+      String sql = "SELECT id AS mId, name AS mName, course_code AS mCourseCode, term_start AS mTermStart, term_end AS mTermEnd FROM courses WHERE id = :id";
       Course course = con.createQuery(sql)
                          .addParameter("id", id)
                          .executeAndFetchFirst(Course.class);
@@ -84,16 +85,16 @@ public class Course {
     }
   }
 
-  public void update(String name, int departmentId, String termStart, String termEnd) {
+  public void update(String name, String courseCode, String termStart, String termEnd) {
     mName = name;
-    mDepartmentId = departmentId;
+    mCourseCode = courseCode;
     mTermStart = termStart;
     mTermEnd = termEnd;
     try (Connection con = DB.sql2o.open()) {
-      String sql = "UPDATE courses SET name = :name, department_id = :departmentId, term_start = :termStart, term_end = :termEnd WHERE id = :id";
+      String sql = "UPDATE courses SET name = :name, course_code = :courseCode, term_start = :termStart, term_end = :termEnd WHERE id = :id";
       con.createQuery(sql)
          .addParameter("name", name)
-         .addParameter("departmentId", departmentId)
+         .addParameter("courseCode", courseCode)
          .addParameter("termStart", termStart)
          .addParameter("termEnd", termEnd)
          .addParameter("id", this.getId())
