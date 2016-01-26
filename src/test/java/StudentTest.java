@@ -38,5 +38,28 @@ public class StudentTest {
     assertEquals("Nathan Romike", newStudent.getFullName());
   }
 
-  
+  @Test
+  public void getCourses_returnsAllCourses_ArrayList() {
+    Course newCourse = new Course("Intro to Programming", 1, "2016-01-04", "2016-02-05");
+    newCourse.save();
+    Student newStudent = new Student("Bowen", "Midori", "2016-01-26");
+    newStudent.save();
+    newStudent.addCourse(newCourse);
+    List savedCourses = newStudent.getCourses();
+    assertEquals(savedCourses.size(), 1);
+  }
+
+  @Test
+  public void addCourse_AddsCourseToStudentEnrollment() {
+    Student newStudent = new Student("Bowen", "Midori", "2016-01-26");
+    newStudent.save();
+    Course newCourse = new Course("Intro to Programming", 1, "2016-01-04", "2016-02-05");
+    newCourse.save();
+
+    newStudent.addCourse(newCourse);
+    Course savedCourse = newStudent.getCourses().get(0);
+    assertTrue(newCourse.equals(savedCourse));
+  }
+
+
 }
