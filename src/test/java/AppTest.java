@@ -36,7 +36,18 @@ public class AppTest extends FluentTest {
       fill("#last-name").with("Bowen");
       fill("#first-name").with("Midori");
       fill("#enrollment-date").with("2016-01-23");
-      submit(".btn-primary");
+      submit(".new-student");
       assertThat(pageSource()).contains("2016-01-23");
+    }
+
+  @Test
+    public void newCourseIsAddedToCoursesPage() {
+      goTo("http://localhost:4567/courses");
+      fill("#course-name").with("History");
+      fill("#course-code").with("101");
+      fill("#course-term-start").with("2016-01-04");
+      fill("#course-term-end").with("2016-02-05");
+      submit(".new-course");
+      assertThat(pageSource()).contains("History");
     }
 }
